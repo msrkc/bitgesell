@@ -31,7 +31,12 @@
 
 2. **Pagination & Search**
 
-   - Implement paginated list with server‑side search (`q` param). Contribute to both client and server.
+- Added offset/limit-based pagination to backend API with configurable page sizes
+- Implemented server-side search functionality using query parameter filtering
+- Enhanced frontend with debounced search input (300ms delay) to reduce API calls
+- Added pagination controls with Previous/Next navigation and loading states
+- Updated DataContext to support fetchWithOffset for efficient data fetching
+- Improved user experience with real-time search results and responsive pagination
 
 3. **Performance**
 

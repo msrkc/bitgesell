@@ -17,31 +17,36 @@ async function readData() {
     throw error;
   }
 }
+
 // Utility to write data asynchronously
 async function writeData(data) {
   await fs.writeFile(DATA_PATH, JSON.stringify(data, null, 2), 'utf8');
 }
 
-// GET /api/items
+// GET /api/items with offset and limit
 router.get('/', async (req, res, next) => {
   try {
     const data = await readData();
-    const { limit, q } = req.query;
+    const { limit = 10, offset = 0, q = '' } = req.query;
+
+    // Convert and validate parameters
+    const limitNum = Math.max(1, Math.min(100, parseInt(limit) || 10));
+    const offsetNum = Math.max(0, parseInt(offset) || 0);
+
     let results = data;
 
-    if (q) {
+    // Apply search filter
+    if (q && q.trim()) {
+      const searchTerm = q.toLowerCase().trim();
       // Simple substring search (i would use a proper search library for production)
-      results = results.filter((item) => item.name && item.name.toLowerCase().includes(q.toLowerCase()));
+      results = results.filter((item) => (item.name && item.name.toLowerCase().includes(searchTerm)) || (item.category && item.category.toLowerCase().includes(searchTerm)));
     }
 
-    if (limit) {
-      const limitNum = parseInt(limit);
-      if (!isNaN(limitNum) && limitNum > 0) {
-        results = results.slice(0, limitNum);
-      }
-    }
+    // Apply offset and limit
+    const paginatedResults = results.slice(offsetNum, offsetNum + limitNum);
 
-    res.json(results);
+    // Return simple response
+    res.json(paginatedResults);
   } catch (err) {
     next(err);
   }
@@ -75,7 +80,7 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     // Basic validation
-    const { name, ...otherFields } = req.body;
+    const { name, category, price, ...otherFields } = req.body;
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       const err = new Error('Name is required and must be a non-empty string');
       err.status = 400;
@@ -86,6 +91,8 @@ router.post('/', async (req, res, next) => {
     const item = {
       id: Date.now(),
       name: name.trim(),
+      category: category || 'uncategorized',
+      price: parseFloat(price) || 0,
       ...otherFields,
       createdAt: new Date().toISOString(),
     };
