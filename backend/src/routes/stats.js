@@ -39,4 +39,8 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router._resetCache = () => {
+  statsCache = null;
+  lastCacheTime = 0;
+};
 module.exports = router;

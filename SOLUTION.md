@@ -15,7 +15,11 @@
 - Stats are recalculated only when cache expires, reducing CPU usage and file I/O
 
 3. **Testing**
-   - Add **unit tests** (Jest) for items routes (happy path + error cases).
+
+- Implemented comprehensive Jest tests for /api/items and /api/stats endpoints
+- Used manual and automatic mocking of fs.promises to isolate file system operations
+- Ensured cache reset and module isolation between tests to prevent state leakage
+- Added tests for GET, POST, query, and error scenarios for both endpoints
 
 ### 💻 Frontend (React)
 
