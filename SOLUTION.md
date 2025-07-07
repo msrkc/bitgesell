@@ -40,35 +40,9 @@
 
 3. **Performance**
 
-   - The list can grow large. Integrate **virtualization** (e.g., `react-window`) to keep UI smooth.
+- Added @tanstack/react-virtual for efficient rendering of large item lists
+- Implemented mock data generator utility to create 1000+ test items for performance testing
+- Enhanced DataContext with generateMockData function for testing large datasets
+- Maintained pagination controls for API data while supporting bulk loading for mock data
 
 4. **UI/UX Polish**
-   - Feel free to enhance styling, accessibility, and add loading/skeleton states.
-
-### 📦 What We Expect
-
-- Idiomatic, clean code with comments where necessary.
-- Solid error handling and edge‑case consideration.
-- Tests that pass via `npm test` in both frontend and backend.
-- A brief `SOLUTION.md` describing **your approach and trade‑offs**.
-
-## Quick Start
-
-node version: 18.XX
-
-```bash
-nvm install 18
-nvm use 18
-
-# Terminal 1
-cd backend
-npm install
-npm start
-
-# Terminal 2
-cd frontend
-npm install
-npm start
-```
-
-> The frontend proxies `/api` requests to `http://localhost:3001`.

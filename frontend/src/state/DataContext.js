@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { generateMockItems } from '../utils/mockData';
 
 const DataContext = createContext();
 
@@ -6,6 +7,17 @@ export function DataProvider({ children }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Generate mock data for testing large lists
+  const generateMockData = useCallback((count = 1000) => {
+    setLoading(true);
+    // Simulate API delay
+    setTimeout(() => {
+      const mockItems = generateMockItems(count);
+      setItems(mockItems);
+      setLoading(false);
+    }, 500);
+  }, []);
 
   const fetchWithOffset = useCallback(async (params = {}) => {
     setLoading(true);
@@ -50,6 +62,7 @@ export function DataProvider({ children }) {
         loading,
         error,
         fetchWithOffset,
+        generateMockData,
       }}
     >
       {children}
