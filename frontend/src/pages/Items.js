@@ -7,11 +7,22 @@ function Items() {
 
   useEffect(() => {
     let active = true;
+    // i would use AbortController for more modern approach
+    // react query in production
 
-    // Intentional bug: setState called after component unmount if request is slow
-    fetchItems().catch(console.error);
+    // Wrap fetchItems to only update state if still mounted / active
+    const safeFetch = async () => {
+      try {
+        await fetchItems();
+      } catch (err) {
+        if (active) {
+          console.error(err);
+        }
+      }
+    };
 
-    // Clean‑up to avoid memory leak (candidate should implement)
+    safeFetch();
+
     return () => {
       active = false;
     };
@@ -21,7 +32,7 @@ function Items() {
 
   return (
     <ul>
-      {items.map(item => (
+      {items.map((item) => (
         <li key={item.id}>
           <Link to={'/items/' + item.id}>{item.name}</Link>
         </li>

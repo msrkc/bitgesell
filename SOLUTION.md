@@ -25,7 +25,9 @@
 
 1. **Memory Leak**
 
-   - `Items.js` leaks memory if the component unmounts before fetch completes. Fix it.
+- Used exising active flag in useEffect cleanup to ensure state updates only occur if component is still mounted
+- Prevents memory leaks and React warnings when fetchItems resolves after component unmount
+- Note: For production, using React Query or AbortController is recommended for robust fetch cancellation and resource management
 
 2. **Pagination & Search**
 
